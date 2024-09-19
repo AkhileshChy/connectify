@@ -54,7 +54,7 @@ export const login = async (req, res) => {
             return res.status(400).json({ message: "Invalid Credentials" });
         }
         const token = jwt.sign({ userId: user._id }, process.env.JWT_SECRET, { expiresIn: "3d" });
-        await res.cookie("jwt-connectify", token, {
+        await res.cookie('jwt-connectify', token, {
 			httpOnly: true, 
 			maxAge: 3 * 24 * 60 * 60 * 1000,
 			sameSite: "strict", 
@@ -63,6 +63,20 @@ export const login = async (req, res) => {
         res.json({ message: "Logged in successfully" });
     } catch (error) {
         console.error("Error in login controller:", error);
+		res.status(500).json({ message: "Server error" });
+    }
+}
+
+export const logout = (req, res) => {
+    res.clearCookie("jwt-connectify");
+    res.json({ message: "Logged out successfully" });
+}
+
+export const getCurrentUser = async (req, res) => {
+    try {
+        res.json(req.user);
+    } catch (error) {
+        console.error("Error in getCurrentUser controller:", error);
 		res.status(500).json({ message: "Server error" });
     }
 }

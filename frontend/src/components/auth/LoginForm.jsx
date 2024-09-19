@@ -13,6 +13,7 @@ const LoginForm = () => {
         mutationFn: (data) => axiosInstance.post("/auth/login", data),
         onSuccess: () => {
             toast.success("Logged in");
+            queryClient.invalidateQueries({ queryKey: ["authUser"] });
         },
         onError: (err) => {
             toast.error(err.response.data.message || "Something went wrong");
